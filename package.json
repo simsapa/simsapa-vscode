@@ -24,13 +24,24 @@
         "command": "extension.appendLinkedWordListFromLine",
         "title": "Append Linked Word List",
         "when": "editorLangId == markdown"
+      },
+      {
+        "command": "extension.toggleLinkFromWordOrSelection",
+        "title": "Toggle Link From Current Word Or Selection",
+        "when": "editorLangId == markdown"
       }
     ],
     "keybindings": [
       {
         "command": "extension.appendLinkedWordListFromLine",
-        "key": "ctrl+l",
-        "mac": "cmd+l",
+        "key": "ctrl+w shift+l",
+        "mac": "cmd+w shift+l",
+        "when": "editorLangId == markdown"
+      },
+      {
+        "command": "extension.toggleLinkFromWordOrSelection",
+        "key": "ctrl+w l",
+        "mac": "cmd+w l",
         "when": "editorLangId == markdown"
       }
     ]
