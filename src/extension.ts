@@ -1,27 +1,92 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
+import * as path from "path";
+import * as fs from "fs";
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+const WORD_DIR = "w";
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "simsapa-vscode" is now active!');
+class PaliWordDefinitionProvider implements vscode.DefinitionProvider {
+  public async provideDefinition(
+    document: vscode.TextDocument,
+    position: vscode.Position,
+    token: vscode.CancellationToken
+  ) {
+    const line = document.lineAt(position.line).text;
+    const m = line.match(/\[[^\]]+\]\(([^\)]+)\)/);
+    let link_path = "";
+    if (m !== null) {
+      link_path = m[1];
+    } else {
+      return;
+    }
+    console.log(link_path);
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('extension.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello Dear World!');
-	});
-
-	context.subscriptions.push(disposable);
+    const abs_path = path.join(path.dirname(document.uri.path), link_path);
+    let files = [];
+    if (fs.existsSync(abs_path)) {
+      files.push(vscode.Uri.file(abs_path));
+    }
+    const p = new vscode.Position(0, 0);
+    return files.map((f) => new vscode.Location(f, p));
+  }
 }
 
-// this method is called when your extension is deactivated
+export function activate(context: vscode.ExtensionContext) {
+  const md = { scheme: "file", language: "markdown" };
+  context.subscriptions.push(
+    vscode.languages.registerDefinitionProvider(
+      md,
+      new PaliWordDefinitionProvider()
+    )
+  );
+
+  let disposable = vscode.commands.registerCommand(
+    "extension.appendLinkedWordListFromLine",
+    () => {
+      const editor = vscode.window.activeTextEditor;
+      if (!editor) {
+        return;
+      }
+
+      const n = editor.selection.active.line;
+      const line_text = editor.document.lineAt(n).text;
+      const line_end = editor.document.lineAt(n).range.end;
+
+      const words = line_text
+        .replace("ṁ", "ṃ")
+        .replace("Ṁ", "Ṃ")
+        .replace(/[“ ”]/g, '"')
+        .replace(/[‘’]/g, "'")
+        .replace(/[^a-zA-ZāīūṃṅñṭḍṇḷṁĀĪŪṂṄÑṬḌṆḶṀ '-]/g, "")
+        .replace(/(\w)'ti\b/g, "$1 'ti")
+        .trim()
+        .split(" ");
+
+      const uri = editor.document.uri;
+
+      const links = words.map((word) => {
+        const name = word.toLowerCase().replace("'", "");
+        const link_path = path.join(WORD_DIR, name + ".md");
+
+        const folder = path.dirname(editor.document.uri.path);
+        const word_path = path.join(folder, link_path);
+
+        let missing = "";
+        if (!fs.existsSync(word_path)) {
+          missing = "X ";
+        }
+
+        return "- " + missing + "[" + word + "](" + link_path + ")";
+      });
+
+      const links_text = links.join("\n");
+
+      editor.edit((edit) => {
+        edit.insert(line_end, "\n\n" + links_text + "\n");
+      });
+    }
+  );
+
+  context.subscriptions.push(disposable);
+}
+
 export function deactivate() {}
