@@ -84,7 +84,7 @@ keybinding.
 This extension is not published in the extension Marketplace, it has to be
 installed with the `.vsix` file.
 
-- Download the `simsapa-vscode-N.N.N.vsix` file from Releases
+- Download the `simsapa-vscode-N.N.N.vsix` file from [Releases](https://github.com/simsapa/simsapa-vscode/releases)
 - In VS Code, open the Extensions sidebar (View > Extensions)
 - At the top, open the menu with the `...` icon
 - Select 'Install From VSIX', select the `.vsix` file
@@ -109,7 +109,5 @@ ext install yzhang.markdown-all-in-one
 
 ## Release Notes
 
-### 0.0.1
-
-Initial release.
+See the [Change Log](CHANGELOG.md).
 
