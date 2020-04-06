@@ -26,7 +26,6 @@ class PaliWordDefinitionProvider implements vscode.DefinitionProvider {
       }
     }
 
-    
     if (link_path.length === 0) {
       return;
     }
@@ -80,11 +79,17 @@ export function activate(context: vscode.ExtensionContext) {
 
       const words = sanitize_line(line_text).split(" ");
 
-      const uri = editor.document.uri;
+      const folder_name = path.basename(path.dirname(editor.document.uri.path));
+      const add_word_dir = (folder_name !== WORD_DIR);
 
       const links = words.map((word) => {
         const name = sanitize_link_word(word);
-        const link_path = path.join(WORD_DIR, name + ".md");
+        let link_path;
+        if (add_word_dir) {
+          link_path = path.join("..", WORD_DIR, name + ".md");
+        } else {
+          link_path = name + ".md";
+        }
 
         const folder = path.dirname(editor.document.uri.path);
         const word_path = path.join(folder, link_path);
@@ -115,8 +120,12 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      const folder = path.dirname(editor.document.uri.path);
-      const add_word_dir = fs.existsSync(path.join(folder, WORD_DIR));
+      const folder_name = path.basename(path.dirname(editor.document.uri.path));
+
+      // The assumption is that you are either editing a word file in the WORD_DIR folder,
+      // or glossing a file in a subfolder of the project root.
+
+      const add_word_dir = (folder_name !== WORD_DIR);
 
       let action_taken = false;
 
@@ -178,7 +187,7 @@ export function activate(context: vscode.ExtensionContext) {
         const w = editor.document.getText(replace_range);
         let link_target = sanitize_link_word(w) + ".md";
         if (add_word_dir) {
-          link_target = path.join(WORD_DIR, link_target);
+          link_target = path.join("..", WORD_DIR, link_target);
         }
         const link_text = "[" + w + "](" + link_target + ")";
 
