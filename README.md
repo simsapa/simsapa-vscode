@@ -14,14 +14,14 @@ word-by-word analysis), and editing word entries in the
 **Table of Contents**
 
 - [Simsapa VS Code Extension](#simsapa-vs-code-extension)
-    - [Features](#features)
-        - [Link helpers](#link-helpers)
-        - [Links as word definitions](#links-as-word-definitions)
-        - [Go to File](#go-to-file)
-    - [Commands and Keybindings](#commands-and-keybindings)
-    - [Install](#install)
-    - [Recommended Extensions](#recommended-extensions)
-    - [Release Notes](#release-notes)
+  - [Features](#features)
+    - [Link helpers](#link-helpers)
+    - [Links as word definitions](#links-as-word-definitions)
+    - [Go to File](#go-to-file)
+  - [Commands and Keybindings](#commands-and-keybindings)
+  - [Install](#install)
+  - [Recommended Extensions](#recommended-extensions)
+  - [Release Notes](#release-notes)
 
 <!-- markdown-toc end -->
 
@@ -32,36 +32,38 @@ then press `L`.
 
 ### Link helpers
 
-Toggle Link From Current Word Or Selection
+`Ctrl+W L` : Toggle Link From Current Word Or Selection
 
-`Ctrl+W L`
+Move the cursor to a Pali word. `Ctrl+W L` will wrap the word in a link, or remove the link if there was one already.
 
-Append Linked Word List
+![word list](assets/word-link.png)
 
-`Ctrl+W Shift+L`
+`Ctrl+W Shift+L` : Append Linked Word List
+
+Move the cursor to Pali line which you want to gloss word-by-word. `Ctrl+W Shift+L` will insert a list of links with each word. An `X` will mark the links where the linked word file is missing.
+
+![word list](assets/append-linked-word-list.png)
 
 ### Links as word definitions
 
 Links can be used to lookup a definition if the linked file exists. These
 commands are built-in VS Code.
 
-Go to Definition
+`Ctrl+Shift+F10` : Peek Definition
 
-`F12`
+![word list](assets/peek-definition.png)
 
-Open Definition to the Side
+`F12` : Go to Definition
 
-`Ctrl+K F12`
-
-Peek Definition
-
-`Ctrl+Shift+F10`
+`Ctrl+K F12` : Open Definition to the Side
 
 ### Go to File
 
 Built-in VS Code command.
 
-`Ctrl+P` Go to File
+`Ctrl+P` : Go to File
+
+![word list](assets/go-to-file.png)
 
 ## Commands and Keybindings
 
