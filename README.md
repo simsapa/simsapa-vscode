@@ -5,6 +5,11 @@ editor](https://code.visualstudio.com/) for glossing Pali texts (writing
 word-by-word analysis), and editing word entries in the
 [dictionary-wiki](https://github.com/simsapa/dictionary-wiki).
 
+- Download the `simsapa-vscode-N.N.N.vsix` file from [Releases](https://github.com/simsapa/simsapa-vscode/releases)
+- In VS Code, open the Extensions sidebar (View > Extensions)
+- At the top, open the menu with the `...` icon
+- Select 'Install From VSIX', select the `.vsix` file
+
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
 
