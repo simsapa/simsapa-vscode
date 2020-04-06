@@ -4,18 +4,30 @@ import * as fs from "fs";
 
 const WORD_DIR = "w";
 
+const RE_LINK = /\[([^\]]+)\]\(([^\)]+)\)/g;
+
 class PaliWordDefinitionProvider implements vscode.DefinitionProvider {
   public async provideDefinition(
     document: vscode.TextDocument,
     position: vscode.Position,
     token: vscode.CancellationToken
   ) {
-    const line = document.lineAt(position.line).text;
-    const m = line.match(/\[[^\]]+\]\(([^\)]+)\)/);
+    const line_text = document.lineAt(position.line).text;
+    const cursor_char = position.character;
+
     let link_path = "";
-    if (m !== null) {
-      link_path = m[1];
-    } else {
+    let result;
+    while ((result = RE_LINK.exec(line_text)) !== null) {
+      let a = result.index;
+      let b = a + result[0].length;
+
+      if (a <= cursor_char && cursor_char <= b) {
+        link_path = result[2];
+      }
+    }
+
+    
+    if (link_path.length === 0) {
       return;
     }
     link_path = link_path.replace("%20", " ");
@@ -115,10 +127,8 @@ export function activate(context: vscode.ExtensionContext) {
       const line_range = editor.document.lineAt(n).range;
       const cursor_char = editor.selection.active.character;
 
-      const re_link = /\[([^\]]+)\]\(([^\)]+)\)/g;
-
       let result;
-      while ((result = re_link.exec(line_text)) !== null) {
+      while ((result = RE_LINK.exec(line_text)) !== null) {
         let a = result.index;
         let b = a + result[0].length;
 
