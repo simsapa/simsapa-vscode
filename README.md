@@ -17,7 +17,6 @@ word-by-word analysis), and editing word entries in the
     - [Install](#install)
     - [Recommended Extensions](#recommended-extensions)
     - [Release Notes](#release-notes)
-        - [0.0.1](#001)
 
 <!-- markdown-toc end -->
 
