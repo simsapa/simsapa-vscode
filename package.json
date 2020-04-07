@@ -2,7 +2,7 @@
   "name": "simsapa-vscode",
   "displayName": "SimsapaVsCode",
   "description": "Simsapa VS Code Extension",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "simsapa",
   "repository": {
     "type": "git",

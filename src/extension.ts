@@ -31,7 +31,10 @@ class PaliWordDefinitionProvider implements vscode.DefinitionProvider {
     }
     link_path = link_path.replace("%20", " ");
 
-    const abs_path = path.join(path.dirname(document.uri.path), link_path);
+    let abs_path = path.join(path.dirname(document.uri.path), link_path);
+    if (process.platform === "win32") {
+      abs_path = abs_path.replace(/^\\/, '');
+    }
     let files = [];
     if (fs.existsSync(abs_path)) {
       files.push(vscode.Uri.file(abs_path));
@@ -86,16 +89,18 @@ export function activate(context: vscode.ExtensionContext) {
         const name = sanitize_link_word(word);
         let link_path;
         if (add_word_dir) {
-          link_path = path.join("..", WORD_DIR, name + ".md");
+          link_path = path.posix.join("..", WORD_DIR, name + ".md");
         } else {
           link_path = name + ".md";
         }
 
-        const folder = path.dirname(editor.document.uri.path);
-        const word_path = path.join(folder, link_path);
+        let abs_path = path.join(path.dirname(editor.document.uri.path), link_path);
+        if (process.platform === "win32") {
+          abs_path = abs_path.replace(/^\\/, '');
+        }
 
         let missing = "";
-        if (!fs.existsSync(word_path)) {
+        if (!fs.existsSync(abs_path)) {
           missing = "X ";
         }
 
@@ -187,7 +192,7 @@ export function activate(context: vscode.ExtensionContext) {
         const w = editor.document.getText(replace_range);
         let link_target = sanitize_link_word(w) + ".md";
         if (add_word_dir) {
-          link_target = path.join("..", WORD_DIR, link_target);
+          link_target = path.posix.join("..", WORD_DIR, link_target);
         }
         const link_text = "[" + w + "](" + link_target + ")";
 
